@@ -60,6 +60,6 @@ public class AuthController {
      */
     @GetMapping("/health")
     public ResponseEntity<?> health() {
-        return ResponseEntity.ok(Map.of("status", "UP", "service", "auth-server"));
+        return ResponseEntity.ok(Map.of("status", "UP", "service", "passport-server"));
     }
 }

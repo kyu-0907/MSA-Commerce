@@ -3,11 +3,11 @@ server:
 
 spring:
   application:
-    name: auth-server
+    name: passport-server
   datasource:
-    url: jdbc:mysql://mysql_db:3306/batchdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-    username: batchuser
-    password: batchpass
+    url: jdbc:mysql://mysql_passport_db:3306/passportdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: passportuser
+    password: passportpass
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:

@@ -7,8 +7,8 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: auth-server
-          uri: http://auth-server:8081
+        - id: passport-server
+          uri: http://passport-server:8081
           predicates:
             - Path=/auth/**
 

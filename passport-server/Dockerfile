@@ -1,11 +1,11 @@
 # Build stage
-FROM eclipse-temurin:17-jdk-alpine AS build
+FROM gradle:8-jdk17 AS build
 WORKDIR /app
 COPY . .
-RUN ./gradlew build -x test
+RUN gradle build -x test
 
 # Run stage
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8081

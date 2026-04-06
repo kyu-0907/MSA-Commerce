@@ -10,7 +10,7 @@ spring:
     jdbc:
       initialize-schema: always
   datasource:
-    url: jdbc:mysql://mysql_db:3306/batchdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://mysql_batch_db:3306/batchdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: batchuser
     password: batchpass
