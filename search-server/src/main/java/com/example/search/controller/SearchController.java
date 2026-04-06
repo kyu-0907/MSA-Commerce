@@ -3,6 +3,7 @@ package com.example.search.controller;
 import com.example.search.domain.Product;
 import com.example.search.repository.ProductSearchRepository;
 import lombok.RequiredArgsConstructor;
+import com.example.search.messaging.ProductEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ public class SearchController {
 
     private final ProductSearchRepository productSearchRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ProductEventPublisher productEventPublisher;
 
     /**
      * GET /api/search?keyword=...
@@ -59,6 +61,8 @@ public class SearchController {
     @PostMapping("/index")
     public ResponseEntity<Product> indexProduct(@RequestBody Product product) {
         Product saved = productSearchRepository.save(product);
+        // Kafka로 이벤트 발행
+        productEventPublisher.publishProductIndexed(saved);
         return ResponseEntity.ok(saved);
     }
 
