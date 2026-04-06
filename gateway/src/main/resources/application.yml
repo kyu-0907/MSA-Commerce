@@ -12,10 +12,23 @@ spring:
           predicates:
             - Path=/auth/**
 
-        - id: batch-elastic
-          uri: http://batch-elastic:8082
+        - id: search-server
+          uri: http://search-server:8083
           predicates:
-            - Path=/api/**
+            - Path=/api/search/**
+
+        - id: batch-server
+          uri: http://batch-server:8084
+          predicates:
+            - Path=/api/batch/**
+
+  data:
+    redis:
+      host: redis
+      port: 6379
+
+kafka:
+  bootstrap-servers: kafka:9092
 
 management:
   endpoints:
