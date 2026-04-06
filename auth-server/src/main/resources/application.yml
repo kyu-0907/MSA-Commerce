@@ -1,0 +1,19 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-server
+  datasource:
+    url: jdbc:mysql://mysql_db:3306/batchdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: batchuser
+    password: batchpass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  secret: msa-practice-jwt-secret-key-must-be-at-least-256-bits-long-for-hs256
+  expiration: 3600000  # 1 hour in milliseconds

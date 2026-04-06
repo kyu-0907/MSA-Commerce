@@ -1,5 +1,7 @@
 version: '3.8'
+
 services:
+  # ─── 인프라 ───────────────────────────────────────────────
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.10.4
     container_name: elasticsearch
@@ -10,6 +12,9 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    networks:
+      - msa-network
+
   mysql:
     image: mysql:8.0
     container_name: mysql_db
@@ -20,3 +25,66 @@ services:
       - MYSQL_PASSWORD=batchpass
     ports:
       - "3306:3306"
+    networks:
+      - msa-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─── MSA 서비스 ──────────────────────────────────────────
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-server
+      - batch-elastic
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  auth-server:
+    build:
+      context: ./auth-server
+      dockerfile: Dockerfile
+    container_name: auth-server
+    ports:
+      - "8081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  batch-elastic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: batch-elastic
+    ports:
+      - "8082:8082"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_started
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_db:3306/batchdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      - SPRING_DATASOURCE_USERNAME=batchuser
+      - SPRING_DATASOURCE_PASSWORD=batchpass
+      - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
+
+networks:
+  msa-network:
+    driver: bridge
