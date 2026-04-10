@@ -22,6 +22,21 @@ spring:
           predicates:
             - Path=/api/batch/**
 
+        - id: product-server
+          uri: http://product-server:8085
+          predicates:
+            - Path=/api/products/**
+
+        - id: order-server
+          uri: http://order-server:8086
+          predicates:
+            - Path=/api/orders/**
+
+        - id: payment-server
+          uri: http://payment-server:8087
+          predicates:
+            - Path=/api/payments/**
+
   data:
     redis:
       host: redis

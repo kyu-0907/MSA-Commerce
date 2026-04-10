@@ -51,6 +51,60 @@ services:
       timeout: 5s
       retries: 5
 
+  mysql-product:
+    image: mysql:8.0
+    container_name: mysql_product_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=productdb
+      - MYSQL_USER=productuser
+      - MYSQL_PASSWORD=productpass
+    ports:
+      - "3308:3306"
+    networks:
+      - msa-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mysql-order:
+    image: mysql:8.0
+    container_name: mysql_order_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=orderdb
+      - MYSQL_USER=orderuser
+      - MYSQL_PASSWORD=orderpass
+    ports:
+      - "3309:3306"
+    networks:
+      - msa-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mysql-payment:
+    image: mysql:8.0
+    container_name: mysql_payment_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=paymentdb
+      - MYSQL_USER=paymentuser
+      - MYSQL_PASSWORD=paymentpass
+    ports:
+      - "3310:3306"
+    networks:
+      - msa-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:7.2-alpine
     container_name: redis
@@ -187,6 +241,81 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_batch_db:3306/batchdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       - SPRING_DATASOURCE_USERNAME=batchuser
       - SPRING_DATASOURCE_PASSWORD=batchpass
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
+  product-server:
+    build:
+      context: ./product-server
+      dockerfile: Dockerfile
+    container_name: product-server
+    ports:
+      - "8085:8085"
+    depends_on:
+      mysql-product:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_product_db:3306/productdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      - SPRING_DATASOURCE_USERNAME=productuser
+      - SPRING_DATASOURCE_PASSWORD=productpass
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
+  order-server:
+    build:
+      context: ./order-server
+      dockerfile: Dockerfile
+    container_name: order-server
+    ports:
+      - "8086:8086"
+    depends_on:
+      mysql-order:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_order_db:3306/orderdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      - SPRING_DATASOURCE_USERNAME=orderuser
+      - SPRING_DATASOURCE_PASSWORD=orderpass
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
+  payment-server:
+    build:
+      context: ./payment-server
+      dockerfile: Dockerfile
+    container_name: payment-server
+    ports:
+      - "8087:8087"
+    depends_on:
+      mysql-payment:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_payment_db:3306/paymentdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      - SPRING_DATASOURCE_USERNAME=paymentuser
+      - SPRING_DATASOURCE_PASSWORD=paymentpass
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092

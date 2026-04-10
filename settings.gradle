@@ -1,2 +1,9 @@
-rootProject.name = 'batch-elastic'
+rootProject.name = 'commerce-msa'
 
+include 'gateway'
+include 'passport-server'
+include 'search-server'
+include 'batch-server'
+include 'product-server'
+include 'order-server'
+include 'payment-server'
