@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-rootProject.name = 'commerce-msa'
-=======
 rootProject.name = 'MSA-COMMERCE'
->>>>>>> 1e64bc6e2e21d19a583eac2cfbfa51057b20afd2
 
 include 'gateway'
 include 'passport-server'
@@ -11,3 +7,4 @@ include 'batch-server'
 include 'product-server'
 include 'order-server'
 include 'payment-server'
+include 'auth-server'

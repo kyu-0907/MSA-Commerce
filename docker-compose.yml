@@ -105,6 +105,24 @@ services:
       timeout: 5s
       retries: 5
 
+  mysql-auth:
+    image: mysql:8.0
+    container_name: mysql_auth_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=authdb
+      - MYSQL_USER=authuser
+      - MYSQL_PASSWORD=authpass
+    ports:
+      - "3311:3306"
+    networks:
+      - msa-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:7.2-alpine
     container_name: redis
@@ -319,6 +337,24 @@ services:
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
+  auth-server:
+    build:
+      context: ./auth-server
+      dockerfile: Dockerfile
+    container_name: auth-server
+    ports:
+      - "8088:8088"
+    depends_on:
+      mysql-auth:
+        condition: service_healthy
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_auth_db:3306/authdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      - SPRING_DATASOURCE_USERNAME=authuser
+      - SPRING_DATASOURCE_PASSWORD=authpass
 
 networks:
   msa-network:

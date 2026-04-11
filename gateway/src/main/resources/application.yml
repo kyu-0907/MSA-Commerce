@@ -37,6 +37,11 @@ spring:
           predicates:
             - Path=/api/payments/**
 
+        - id: auth-server
+          uri: http://auth-server:8088
+          predicates:
+            - Path=/api/auth/**
+
   data:
     redis:
       host: redis
