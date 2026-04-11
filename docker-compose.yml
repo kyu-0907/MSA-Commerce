@@ -356,6 +356,22 @@ services:
       - SPRING_DATASOURCE_USERNAME=authuser
       - SPRING_DATASOURCE_PASSWORD=authpass
 
+  push-server:
+    build:
+      context: ./push-server
+      dockerfile: Dockerfile
+    container_name: push-server
+    ports:
+      - "8089:8089"
+    depends_on:
+      kafka:
+        condition: service_healthy
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+
 networks:
   msa-network:
     driver: bridge

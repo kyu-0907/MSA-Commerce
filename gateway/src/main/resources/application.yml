@@ -42,6 +42,11 @@ spring:
           predicates:
             - Path=/api/auth/**
 
+        - id: push-server
+          uri: http://push-server:8089
+          predicates:
+            - Path=/api/push/**
+
   data:
     redis:
       host: redis
