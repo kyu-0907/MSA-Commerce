@@ -17,37 +17,14 @@ class SearchController(
 ) {
 
     @GetMapping
-    fun search(@RequestParam keyword: String): ResponseEntity<List<Product>> {
-        val cacheKey = "search:$keyword"
-
-        @Suppress("UNCHECKED_CAST")
-        val cached = redisTemplate.opsForValue().get(cacheKey) as? List<Product>
-        if (cached != null) {
-            return ResponseEntity.ok(cached)
-        }
-
-        val results = productSearchRepository.findByNameContaining(keyword)
-
-        redisTemplate.opsForValue().set(cacheKey, results, 60, TimeUnit.SECONDS)
-
-        return ResponseEntity.ok(results)
-    }
+    fun search(@RequestParam keyword: String): ResponseEntity<List<Product>> = TODO()
 
     @GetMapping("/category/{category}")
-    fun searchByCategory(@PathVariable category: String): ResponseEntity<List<Product>> {
-        val results = productSearchRepository.findByCategory(category)
-        return ResponseEntity.ok(results)
-    }
+    fun searchByCategory(@PathVariable category: String): ResponseEntity<List<Product>> = TODO()
 
     @PostMapping("/index")
-    fun indexProduct(@RequestBody product: Product): ResponseEntity<Product> {
-        val saved = productSearchRepository.save(product)
-        productEventPublisher.publishProductIndexed(saved)
-        return ResponseEntity.ok(saved)
-    }
+    fun indexProduct(@RequestBody product: Product): ResponseEntity<Product> = TODO()
 
     @GetMapping("/health")
-    fun health(): ResponseEntity<*> {
-        return ResponseEntity.ok(mapOf("status" to "UP", "service" to "search-server"))
-    }
+    fun health(): ResponseEntity<*> = TODO()
 }

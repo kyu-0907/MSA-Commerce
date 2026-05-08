@@ -13,22 +13,14 @@ class PaymentController(
 ) {
 
     @GetMapping("/order/{orderId}")
-    fun getPaymentByOrder(@PathVariable orderId: Long): ResponseEntity<PaymentDto> {
-        return ResponseEntity.ok(paymentService.getPaymentByOrder(orderId))
-    }
+    fun getPaymentByOrder(@PathVariable orderId: Long): ResponseEntity<PaymentDto> = TODO()
 
     @GetMapping("/user/{userId}")
-    fun getPaymentsByUser(@PathVariable userId: Long): ResponseEntity<List<PaymentDto>> {
-        return ResponseEntity.ok(paymentService.getPaymentsByUser(userId))
-    }
+    fun getPaymentsByUser(@PathVariable userId: Long): ResponseEntity<List<PaymentDto>> = TODO()
 
     @PostMapping
-    fun processPayment(@RequestBody dto: PaymentDto): ResponseEntity<PaymentDto> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(paymentService.processPayment(dto))
-    }
+    fun processPayment(@RequestBody dto: PaymentDto): ResponseEntity<PaymentDto> = TODO()
 
     @PostMapping("/{id}/refund")
-    fun refundPayment(@PathVariable id: Long): ResponseEntity<PaymentDto> {
-        return ResponseEntity.ok(paymentService.refundPayment(id))
-    }
+    fun refundPayment(@PathVariable id: Long): ResponseEntity<PaymentDto> = TODO()
 }

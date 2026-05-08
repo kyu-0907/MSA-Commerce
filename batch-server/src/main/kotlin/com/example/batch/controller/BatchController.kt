@@ -17,22 +17,8 @@ class BatchController(
 ) {
 
     @PostMapping("/run")
-    fun runJob(): ResponseEntity<*> {
-        return try {
-            jobLauncher.run(
-                sampleProductJob,
-                JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis())
-                    .toJobParameters()
-            )
-            ResponseEntity.ok(mapOf("status" to "STARTED", "message" to "Job launched successfully"))
-        } catch (e: Exception) {
-            ResponseEntity.status(500).body(mapOf("status" to "FAILED", "error" to e.message))
-        }
-    }
+    fun runJob(): ResponseEntity<*> = TODO()
 
     @GetMapping("/health")
-    fun health(): ResponseEntity<*> {
-        return ResponseEntity.ok(mapOf("status" to "UP", "service" to "batch-server"))
-    }
+    fun health(): ResponseEntity<*> = TODO()
 }

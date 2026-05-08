@@ -13,44 +13,26 @@ class ProductController(
 ) {
 
     @GetMapping
-    fun getAllProducts(): ResponseEntity<List<ProductDto>> {
-        return ResponseEntity.ok(productService.getAllProducts())
-    }
+    fun getAllProducts(): ResponseEntity<List<ProductDto>> = TODO()
 
     @GetMapping("/{id}")
-    fun getProduct(@PathVariable id: Long): ResponseEntity<ProductDto> {
-        return ResponseEntity.ok(productService.getProduct(id))
-    }
+    fun getProduct(@PathVariable id: Long): ResponseEntity<ProductDto> = TODO()
 
     @GetMapping("/category/{category}")
-    fun getProductsByCategory(@PathVariable category: String): ResponseEntity<List<ProductDto>> {
-        return ResponseEntity.ok(productService.getProductsByCategory(category))
-    }
+    fun getProductsByCategory(@PathVariable category: String): ResponseEntity<List<ProductDto>> = TODO()
 
     @GetMapping("/search")
-    fun searchProducts(@RequestParam keyword: String): ResponseEntity<List<ProductDto>> {
-        return ResponseEntity.ok(productService.searchProducts(keyword))
-    }
+    fun searchProducts(@RequestParam keyword: String): ResponseEntity<List<ProductDto>> = TODO()
 
     @PostMapping
-    fun createProduct(@RequestBody dto: ProductDto): ResponseEntity<ProductDto> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.createProduct(dto))
-    }
+    fun createProduct(@RequestBody dto: ProductDto): ResponseEntity<ProductDto> = TODO()
 
     @PutMapping("/{id}")
-    fun updateProduct(@PathVariable id: Long, @RequestBody dto: ProductDto): ResponseEntity<ProductDto> {
-        return ResponseEntity.ok(productService.updateProduct(id, dto))
-    }
+    fun updateProduct(@PathVariable id: Long, @RequestBody dto: ProductDto): ResponseEntity<ProductDto> = TODO()
 
     @DeleteMapping("/{id}")
-    fun deleteProduct(@PathVariable id: Long): ResponseEntity<Void> {
-        productService.deleteProduct(id)
-        return ResponseEntity.noContent().build()
-    }
+    fun deleteProduct(@PathVariable id: Long): ResponseEntity<Void> = TODO()
 
     @PatchMapping("/{id}/stock/decrease")
-    fun decreaseStock(@PathVariable id: Long, @RequestParam quantity: Int): ResponseEntity<Void> {
-        productService.decreaseStock(id, quantity)
-        return ResponseEntity.ok().build()
-    }
+    fun decreaseStock(@PathVariable id: Long, @RequestParam quantity: Int): ResponseEntity<Void> = TODO()
 }

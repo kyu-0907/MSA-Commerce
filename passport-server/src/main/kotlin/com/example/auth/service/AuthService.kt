@@ -27,45 +27,13 @@ class AuthService {
         )
     }
 
-    fun login(request: LoginRequest): TokenResponse {
-        val storedPassword = USERS[request.username]
-        if (storedPassword == null || storedPassword != request.password) {
-            throw BadCredentialsException("Invalid username or password")
-        }
+    fun login(request: LoginRequest): TokenResponse = TODO()
 
-        val token = generateToken(request.username)
-        return TokenResponse(token, "Bearer", expirationMs / 1000)
-    }
+    fun validateToken(token: String): Boolean = TODO()
 
-    fun validateToken(token: String): Boolean {
-        return try {
-            getClaims(token)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
+    fun getUsernameFromToken(token: String): String = TODO()
 
-    fun getUsernameFromToken(token: String): String {
-        return getClaims(token).subject
-    }
+    private fun generateToken(username: String): String = TODO()
 
-    private fun generateToken(username: String): String {
-        val key: SecretKey = Keys.hmacShaKeyFor(secretKey.toByteArray())
-        return Jwts.builder()
-            .subject(username)
-            .issuedAt(Date())
-            .expiration(Date(System.currentTimeMillis() + expirationMs))
-            .signWith(key)
-            .compact()
-    }
-
-    private fun getClaims(token: String): Claims {
-        val key: SecretKey = Keys.hmacShaKeyFor(secretKey.toByteArray())
-        return Jwts.parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(token)
-            .payload
-    }
+    private fun getClaims(token: String): Claims = TODO()
 }

@@ -12,11 +12,5 @@ import org.springframework.web.bind.annotation.RestController
 class PushController(private val pushService: PushService) {
 
     @PostMapping("/send")
-    suspend fun sendPush(@RequestBody request: PushRequest): Map<String, Any> {
-        val success = pushService.sendPush(request)
-        return mapOf(
-            "success" to success,
-            "message" to if (success) "푸시 발송 성공" else "푸시 발송 실패"
-        )
-    }
+    suspend fun sendPush(@RequestBody request: PushRequest): Map<String, Any> = TODO()
 }

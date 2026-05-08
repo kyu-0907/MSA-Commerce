@@ -19,38 +19,7 @@ class AuthService(
 ) {
 
     @Transactional
-    fun signup(request: SignupRequest) {
-        if (userRepository.existsByUsername(request.username)) {
-            throw RuntimeException("Username already exists")
-        }
-        if (userRepository.existsByEmail(request.email)) {
-            throw RuntimeException("Email already exists")
-        }
+    fun signup(request: SignupRequest): Unit = TODO()
 
-        val user = User(
-            username = request.username,
-            password = passwordEncoder.encode(request.password),
-            email = request.email,
-            role = "ROLE_USER"
-        )
-
-        userRepository.save(user)
-    }
-
-    fun login(request: LoginRequest): AuthResponse {
-        val user = userRepository.findByUsername(request.username)
-            .orElseThrow { RuntimeException("User not found") }
-
-        if (!passwordEncoder.matches(request.password, user.password)) {
-            throw RuntimeException("Invalid password")
-        }
-
-        val token = jwtTokenProvider.generateToken(user.username)
-
-        return AuthResponse(
-            accessToken = token,
-            tokenType = "Bearer",
-            expiresIn = jwtTokenProvider.expirationTime / 1000
-        )
-    }
+    fun login(request: LoginRequest): AuthResponse = TODO()
 }

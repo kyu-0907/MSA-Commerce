@@ -18,13 +18,8 @@ class AuthController(
 ) {
 
     @PostMapping("/signup")
-    fun signup(@RequestBody request: SignupRequest): ResponseEntity<Void> {
-        authService.signup(request)
-        return ResponseEntity.status(HttpStatus.CREATED).build()
-    }
+    fun signup(@RequestBody request: SignupRequest): ResponseEntity<Void> = TODO()
 
     @PostMapping("/login")
-    fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthResponse> {
-        return ResponseEntity.ok(authService.login(request))
-    }
+    fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthResponse> = TODO()
 }

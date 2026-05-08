@@ -14,31 +14,20 @@ class OrderController(
 ) {
 
     @GetMapping("/user/{userId}")
-    fun getOrdersByUser(@PathVariable userId: Long): ResponseEntity<List<OrderDto>> {
-        return ResponseEntity.ok(orderService.getOrdersByUser(userId))
-    }
+    fun getOrdersByUser(@PathVariable userId: Long): ResponseEntity<List<OrderDto>> = TODO()
 
     @GetMapping("/{id}")
-    fun getOrder(@PathVariable id: Long): ResponseEntity<OrderDto> {
-        return ResponseEntity.ok(orderService.getOrder(id))
-    }
+    fun getOrder(@PathVariable id: Long): ResponseEntity<OrderDto> = TODO()
 
     @PostMapping
-    fun createOrder(@RequestBody dto: OrderDto): ResponseEntity<OrderDto> {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(dto))
-    }
+    fun createOrder(@RequestBody dto: OrderDto): ResponseEntity<OrderDto> = TODO()
 
     @PatchMapping("/{id}/status")
     fun updateOrderStatus(
         @PathVariable id: Long,
         @RequestParam status: Order.OrderStatus
-    ): ResponseEntity<OrderDto> {
-        return ResponseEntity.ok(orderService.updateOrderStatus(id, status))
-    }
+    ): ResponseEntity<OrderDto> = TODO()
 
     @DeleteMapping("/{id}")
-    fun cancelOrder(@PathVariable id: Long): ResponseEntity<Void> {
-        orderService.cancelOrder(id)
-        return ResponseEntity.noContent().build()
-    }
+    fun cancelOrder(@PathVariable id: Long): ResponseEntity<Void> = TODO()
 }
