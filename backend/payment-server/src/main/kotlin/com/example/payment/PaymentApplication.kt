@@ -9,3 +9,4 @@ class PaymentApplication
 fun main(args: Array<String>) {
     runApplication<PaymentApplication>(*args)
 }
+
