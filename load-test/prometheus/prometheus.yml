@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # 부하테스트 대상 애플리케이션의 메트릭(예: Spring Boot Actuator /actuator/prometheus)도
+  # 함께 수집하고 싶다면 아래 예시를 참고해 job을 추가하세요.
+  # - job_name: 'target-app'
+  #   metrics_path: '/actuator/prometheus'
+  #   scrape_interval: 5s
+  #   static_configs:
+  #     - targets: ['host.docker.internal:8080']
+
+# k6는 위 scrape_configs가 아니라 Prometheus Remote Write(--web.enable-remote-write-receiver)로
+# 메트릭을 직접 push하므로 별도의 scrape job이 필요하지 않습니다.
