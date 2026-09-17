@@ -7,20 +7,10 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: passport-server
-          uri: http://passport-server:8081
-          predicates:
-            - Path=/auth/**
-
         - id: search-server
           uri: http://search-server:8083
           predicates:
             - Path=/api/search/**
-
-        - id: batch-server
-          uri: http://batch-server:8084
-          predicates:
-            - Path=/api/batch/**
 
         - id: product-server
           uri: http://product-server:8085
@@ -41,11 +31,6 @@ spring:
           uri: http://auth-server:8088
           predicates:
             - Path=/api/auth/**
-
-        - id: push-server
-          uri: http://push-server:8089
-          predicates:
-            - Path=/api/push/**
 
   data:
     redis:

@@ -15,42 +15,6 @@ services:
     networks:
       - msa-network
 
-  mysql-batch:
-    image: mysql:8.0
-    container_name: mysql_batch_db
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=batchdb
-      - MYSQL_USER=batchuser
-      - MYSQL_PASSWORD=batchpass
-    ports:
-      - "3306:3306"
-    networks:
-      - msa-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  mysql-passport:
-    image: mysql:8.0
-    container_name: mysql_passport_db
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=passportdb
-      - MYSQL_USER=passportuser
-      - MYSQL_PASSWORD=passportpass
-    ports:
-      - "3307:3306"
-    networks:
-      - msa-network
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   mysql-product:
     image: mysql:8.0
     container_name: mysql_product_db
@@ -177,40 +141,13 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - passport-server
       - search-server
-      - batch-server
       - redis
       - kafka
     networks:
       - msa-network
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATA_REDIS_HOST=redis
-      - SPRING_DATA_REDIS_PORT=6379
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-
-  passport-server:
-    build:
-      context: ./passport-server
-      dockerfile: Dockerfile
-    container_name: passport-server
-    ports:
-      - "8081:8081"
-    depends_on:
-      mysql-passport:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    networks:
-      - msa-network
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_passport_db:3306/passportdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-      - SPRING_DATASOURCE_USERNAME=passportuser
-      - SPRING_DATASOURCE_PASSWORD=passportpass
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
@@ -234,31 +171,6 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SPRING_ELASTICSEARCH_URIS=http://elasticsearch:9200
-      - SPRING_DATA_REDIS_HOST=redis
-      - SPRING_DATA_REDIS_PORT=6379
-      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-
-  batch-server:
-    build:
-      context: ./batch-server
-      dockerfile: Dockerfile
-    container_name: batch-server
-    ports:
-      - "8084:8084"
-    depends_on:
-      mysql-batch:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      kafka:
-        condition: service_healthy
-    networks:
-      - msa-network
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_batch_db:3306/batchdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
-      - SPRING_DATASOURCE_USERNAME=batchuser
-      - SPRING_DATASOURCE_PASSWORD=batchpass
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
@@ -355,22 +267,6 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_auth_db:3306/authdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       - SPRING_DATASOURCE_USERNAME=authuser
       - SPRING_DATASOURCE_PASSWORD=authpass
-
-  push-server:
-    build:
-      context: ./push-server
-      dockerfile: Dockerfile
-    container_name: push-server
-    ports:
-      - "8089:8089"
-    depends_on:
-      kafka:
-        condition: service_healthy
-    networks:
-      - msa-network
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
 networks:
   msa-network:
