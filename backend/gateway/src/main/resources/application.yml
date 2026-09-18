@@ -32,6 +32,11 @@ spring:
           predicates:
             - Path=/api/auth/**
 
+        - id: user-server
+          uri: http://user-server:8090
+          predicates:
+            - Path=/api/users/**
+
         - id: event-server
           uri: http://event-server:8089
           predicates:

@@ -1,0 +1,15 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: user-server
+  datasource:
+    url: jdbc:mysql://mysql-user:3306/userdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    username: useruser
+    password: userpass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
