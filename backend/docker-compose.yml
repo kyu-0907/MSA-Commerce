@@ -87,6 +87,24 @@ services:
       timeout: 5s
       retries: 5
 
+  mysql-event:
+    image: mysql:8.0
+    container_name: mysql_event_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=eventdb
+      - MYSQL_USER=eventuser
+      - MYSQL_PASSWORD=eventpass
+    ports:
+      - "3312:3306"
+    networks:
+      - msa-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:7.2-alpine
     container_name: redis
@@ -142,6 +160,7 @@ services:
       - "8080:8080"
     depends_on:
       - search-server
+      - event-server
       - redis
       - kafka
     networks:
@@ -267,6 +286,31 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_auth_db:3306/authdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       - SPRING_DATASOURCE_USERNAME=authuser
       - SPRING_DATASOURCE_PASSWORD=authpass
+
+  event-server:
+    build:
+      context: ./event-server
+      dockerfile: Dockerfile
+    container_name: event-server
+    ports:
+      - "8089:8089"
+    depends_on:
+      mysql-event:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    networks:
+      - msa-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_event_db:3306/eventdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      - SPRING_DATASOURCE_USERNAME=eventuser
+      - SPRING_DATASOURCE_PASSWORD=eventpass
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
 
 networks:
   msa-network:
